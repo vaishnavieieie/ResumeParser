@@ -1,0 +1,12 @@
+# ignore uploaded files
+uploaded_pdfs/
+# virtualenv
+.venv/
+# pycache
+__pycache__/
+
+main.ipynb
+
+UpdatedResumeDataSet.csv
+
+extracted_data.csv
