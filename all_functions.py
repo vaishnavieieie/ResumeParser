@@ -61,13 +61,23 @@ def process_resume(dataset, job_desc):
     # extract ner
     df['Skills'] = df['Resume'].apply(lambda x: apply_ner(x))
 
+    # calculate similarity for every job_desc
     # calculate similarity
-    job_desc = clean_text(job_desc)
-    job_desc = apply_ner(job_desc)
-    job=job_desc.copy()
-    print("job",type(job))
-    df['Skills_str'] = df['Skills'].apply(lambda x: list_to_string(x))
-    df['Similarity'] = apply_sim(df['Skills_str'], job_desc)
+    # job_desc = clean_text(job_desc)
+    # job_desc = apply_ner(job_desc)
+    # job=job_desc.copy()
+    # print("job",type(job))
+    # df['Skills_str'] = df['Skills'].apply(lambda x: list_to_string(x))
+    # df['Similarity'] = apply_sim(df['Skills_str'], job_desc)
+
+    for i in range(len(job_desc)):
+        print(i)
+        print(len(job_desc))
+        job_proc= clean_text(job_desc[i])
+        job_proc = apply_ner(job_proc)
+        df['Skills_str'] = df['Skills'].apply(lambda x: list_to_string(x))
+        col_name='Job_'+str(i+1)
+        df[col_name] = apply_sim(df['Skills_str'], job_proc)
 
     # extract grades
     df['Grades'] = df['Resume'].apply(lambda x: get_grades(x))
@@ -78,7 +88,7 @@ def process_resume(dataset, job_desc):
     # extract contact info 
     df['Email'] = df['Resume'].apply(lambda x: get_emails(x))
     df['Phone'] = df['Resume'].apply(lambda x: get_phone_numbers(x))
-    df['URL'] = None
+    df['URL'] = df['Resume'].apply(lambda x: get_urls(x))
 
 
     # save to csv
@@ -144,25 +154,13 @@ def remove_special_characters(text):
     cleaned_text = re.sub(pattern, '', text)
     return cleaned_text
 
-# import pdfx
-# def get_urls(file_path):
-#     url_list = []
+def get_urls(text):
+    url_pattern = r'\b(?:https?://|www\.)\S+\b'
+    urls = []
 
-#     # for invalid file path
-#     if os.path.exists(file_path) is False:
-#         return url_list
+    urls = re.findall(url_pattern, text)
 
-#     pdf = pdfx.PDFx(file_path)
-
-#     # get urls
-#     pdf_url_dict = pdf.get_references_as_dict()
-
-#     if "url" not in pdf_url_dict.keys():
-#         return url_list
-
-#     url_list = pdf_url_dict["url"]
-
-#     return url_list
+    return urls
 
 def get_phone_numbers(text):
     phone_numbers = []
