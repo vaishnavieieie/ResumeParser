@@ -41,13 +41,15 @@ def get_max_sim(row):
 if job_desc:
     job_descriptions = job_desc.split('\n\n') 
     button = st.button("Submit")
+    # st.write(job_descriptions)
     if button:
         # display csv as table
         # df = af.process_resume("extracted_data.csv", job_desc)
         df = af.process_resume("extracted_data.csv", job_descriptions)
         df=df.drop(columns=['File'])
-        # df=df.sort_values(by=['Similarity'],ascending=False)
-
+        st.write("All Applicants")
+        st.dataframe(df, use_container_width=True)
+        
         job_columns=[ 'Job_'+str(i+1) for i in range(len(job_descriptions))]
 
         df['max_sim_col'] = df[job_columns].apply(get_max_sim, axis=1)
@@ -60,6 +62,7 @@ if job_desc:
             cols.remove(col)
             data=df[df['max_sim_col'] == col].drop(columns=cols, axis=1)
             data=data.rename(columns={col:'Similarity'}, )
+            data=data.sort_values(by=['Similarity'],ascending=False)
             st.dataframe(data, use_container_width=True)
 
         # st.dataframe(df, use_container_width=True)

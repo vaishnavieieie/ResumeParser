@@ -34,6 +34,8 @@ import os.path
 def save_to_csv(name,uploaded_file):
     print("uploading to csv",name)
     text = extract_text_from_pdf(uploaded_file)
+    if text == "" or text == None:
+        text = "None"
     data = {'File':[uploaded_file.name],'Name': [name], 'Resume': [text]}
     df = pd.DataFrame(data)
     
