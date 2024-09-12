@@ -1,16 +1,11 @@
 import spacy
-from spacy.pipeline import EntityRuler
-from spacy.lang.en import English
-from spacy.tokens import Doc
 import pandas as pd
-import numpy as np
 import re
-import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
-import jsonlines
+# import jsonlines
 import geotext
 from phonenumbers import PhoneNumberMatcher
 
@@ -32,7 +27,7 @@ def extract_text_from_pdf(uploaded_file):
 # works
 import os.path
 def save_to_csv(name,uploaded_file):
-    print("uploading to csv",name)
+    # print("uploading to csv",name)
     text = extract_text_from_pdf(uploaded_file)
     if text == "" or text == None:
         text = "None"
@@ -73,8 +68,8 @@ def process_resume(dataset, job_desc):
     # df['Similarity'] = apply_sim(df['Skills_str'], job_desc)
 
     for i in range(len(job_desc)):
-        print(i)
-        print(len(job_desc))
+        # print(i)
+        # print(len(job_desc))
         job_proc= clean_text(job_desc[i])
         job_proc = apply_ner(job_proc)
         df['Skills_str'] = df['Skills'].apply(lambda x: list_to_string(x))
@@ -111,9 +106,9 @@ def apply_ner(text):
         if ent.label_ == "SKILL":
             if ent.text not in subset:
                 subset.append(ent.text)
-    print(subset)
+    # print(subset)
     # typeof subset
-    print(type(subset))
+    # print(type(subset))
     return subset
 
 def clean_text(text):
@@ -133,7 +128,7 @@ def clean_text(text):
 
 def apply_sim(skills , job_desc):
     job_desc= " ".join(job_desc)
-    print("skills",skills, "job_desc",job_desc)
+    # print("skills",skills, "job_desc",job_desc)
     vectorizer = CountVectorizer()
     X = vectorizer.fit_transform(skills)
     input_vector = vectorizer.transform([job_desc])
